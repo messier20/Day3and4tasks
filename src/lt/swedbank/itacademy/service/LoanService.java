@@ -3,16 +3,15 @@ package lt.swedbank.itacademy.service;
 import lt.swedbank.itacademy.domain.*;
 import lt.swedbank.itacademy.domain.*;
 import lt.swedbank.itacademy.util.DateUtil;
+import lt.swedbank.itacademy.util.LoanUtil;
 
 import java.math.BigDecimal;
 import java.util.*;
 
 
-public class LoanService {
+public class LoanService implements LoanServiceInterface {
     private Loan[] loans;
     private ArrayList<Loan> HighRiskLoans = new ArrayList<>();
-
-
     private BigDecimal averageLoanCost = BigDecimal.ZERO;
     private BigDecimal maximumPriceOfNonExpiredLoans = new BigDecimal(0);
 
@@ -24,11 +23,19 @@ public class LoanService {
         return loans;
     }
 
+    @Override
     public BigDecimal getAverageLoanCost() {
 
         int numberOfLoans = 0;
+        ;
 
         for (Loan loan : loans) {
+
+            if (loan instanceof VehicleLoan) {
+                for (VehicleLoan vehicleLoan : getVehicleLoans())
+                loan.setInterestRate(vehicleLoan.calculateNewInterestRate());
+            }
+
             averageLoanCost = averageLoanCost.add(loan.calculateTotalLoanCost());
             numberOfLoans++;
         }
@@ -38,6 +45,7 @@ public class LoanService {
         return averageLoanCost;
     }
 
+    @Override
     public ArrayList<Loan> getHighRiskLoans() {
 
         for (Loan loan : loans) {
@@ -49,12 +57,14 @@ public class LoanService {
         return HighRiskLoans;
     }
 
+    @Override
     public BigDecimal getAverageLoanCostOfHighRiskLoans() {
 
         return getAverageLoanCost(LoanRiskType.HIGH_RISK);
 
     }
 
+    @Override
     public BigDecimal getMaximumPriceOfNonExpiredLoans() {
 
         for (Loan loan : loans) {
@@ -67,6 +77,7 @@ public class LoanService {
         return maximumPriceOfNonExpiredLoans;
     }
 
+    @Override
     public BigDecimal getAverageLoanCost(LoanRiskType riskType) {
 
         BigDecimal averageLoanCost = BigDecimal.ZERO;
@@ -84,7 +95,7 @@ public class LoanService {
 
     }
 
-    public ArrayList<VehicleLoan> getVehicleLoans() {
+    private ArrayList<VehicleLoan> getVehicleLoans() {
 
         ArrayList<VehicleLoan> VehicleLoans = new ArrayList<>();
 
@@ -96,6 +107,7 @@ public class LoanService {
         return VehicleLoans;
     }
 
+    @Override
     public ArrayList<VehicleLoan> getNormalRiskVehicleLoans() {
 
         ArrayList<VehicleLoan> NormalRiskVehicleLoans = new ArrayList<>();
@@ -110,6 +122,7 @@ public class LoanService {
         return NormalRiskVehicleLoans;
     }
 
+    @Override
     public int getMaximumAgeOfLowRiskLoanedVehicles() {
 
         ArrayList<VehicleLoan> VehicleLoans = getVehicleLoans();
@@ -128,7 +141,7 @@ public class LoanService {
         return temporaryMaxAge;
     }
 
-    public ArrayList<RealEstateLoan> getRealEstateLoan() {
+    private ArrayList<RealEstateLoan> getRealEstateLoan() {
 
         ArrayList<RealEstateLoan> RealEstateLoans = new ArrayList<>();
 
@@ -140,6 +153,7 @@ public class LoanService {
         return RealEstateLoans;
     }
 
+    @Override
     public ArrayList<RealEstateLoan> getPersonalRealEstateLoans() {
 
         ArrayList<RealEstateLoan> RealEstateLoans = getRealEstateLoan();
@@ -153,6 +167,9 @@ public class LoanService {
         return PersonalRealEstateLoans;
     }
 
+
+
+    @Override
     public ArrayList<VehicleLoan> getExpiredHighRiskVehicleLoansOfHighestDuration() {
 
         ArrayList<VehicleLoan> VehicleLoans = getVehicleLoans();
@@ -171,6 +188,67 @@ public class LoanService {
         return ExpiredVehicleLoansOfHighestDuration;
 
     }
+
+    @Override
+    public Collection<HarvesterLoan> getLowRiskHarvesterLoans() {
+
+        Collection<HarvesterLoan> LowRiskHarvesterLoans = new ArrayList<>();
+        for (Loan loan : loans) {
+            if(loan instanceof HarvesterLoan && loan.getRiskType() == LoanRiskType.LOW_RISK) {
+                LowRiskHarvesterLoans.add((HarvesterLoan) loan);
+
+            }
+        }
+        return LowRiskHarvesterLoans;
+    }
+
+    @Override
+    public Collection<LandLoan> getExpiredLandLoansInReservation() {
+        Collection<LandLoan> ExpiredLandLoansInReservation = new ArrayList<>();
+        for (Loan loan : loans) {
+            if(loan instanceof LandLoan && (((LandLoan) loan).isInReservation())) {
+                ExpiredLandLoansInReservation.add((LandLoan) loan);
+            }
+        }
+        return ExpiredLandLoansInReservation;
+    }
+
+    @Override
+    public Collection<VehicleLoan> getLoansOfHigherThanAverageDepreciation() {
+
+        Collection<VehicleLoan> LoansOfHigherThanAverageDepreciation = new ArrayList<>();
+        int counter = 0;
+        BigDecimal sum = new BigDecimal(0);
+        BigDecimal avg = new BigDecimal(0);
+
+        for (VehicleLoan vehicleLoan : getVehicleLoans()) {
+            counter++;
+
+            BigDecimal vehicleDepreciation = LoanUtil.calculateVehicleDepreciation(vehicleLoan);
+            if(LoanUtil.calculateVehicleDepreciation(vehicleLoan).compareTo(vehicleLoan.getPrice()) > 0) {
+                sum = sum.add(vehicleLoan.getPrice());
+            }
+            else {
+                sum = sum.add(vehicleDepreciation);
+            }
+        }
+        avg = sum.divide(BigDecimal.valueOf(counter), 2, BigDecimal.ROUND_UP);
+
+        for (VehicleLoan vehicleLoan : getVehicleLoans()) {
+            if (vehicleLoan.getPrice().compareTo(avg) > 0
+                    && LoanUtil.calculateVehicleDepreciation(vehicleLoan).compareTo(vehicleLoan.getPrice()) > 0) {
+                LoansOfHigherThanAverageDepreciation.add(vehicleLoan);
+            }
+            if (LoanUtil.calculateVehicleDepreciation(vehicleLoan).compareTo(avg) > 0
+                    && vehicleLoan.getPrice().compareTo(LoanUtil.calculateVehicleDepreciation(vehicleLoan)) > 0) {
+                LoansOfHigherThanAverageDepreciation.add(vehicleLoan);
+            }
+        }
+
+        return LoansOfHigherThanAverageDepreciation;
+    }
+
+
 
     public Collection<String> findVehicleModels() {
         List<VehicleLoan> VehicleLoans = getVehicleLoans();
@@ -201,6 +279,18 @@ public class LoanService {
 
         }
         return  groupedLoansByRiskType;
+    }
+
+    public Set<Loan> prioritizeLoans() {
+
+        Set<Loan> prioritisedLoans = new TreeSet<>(new Prioritization());
+
+        for (Loan loan : loans) {
+
+//            Collections.sort();
+            prioritisedLoans.add(loan);
+        }
+        return  prioritisedLoans;
     }
 
 }

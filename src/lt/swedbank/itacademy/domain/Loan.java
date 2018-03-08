@@ -71,7 +71,7 @@ public class Loan {
     }
 
     public BigDecimal calculateInterest() {
-        return price.multiply(interestRate.divide(new BigDecimal(100)));
+        return price.multiply(getInterestRate().divide(new BigDecimal(100)));
     }
 
     public boolean isValid() {

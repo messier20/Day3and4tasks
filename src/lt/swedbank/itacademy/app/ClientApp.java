@@ -3,6 +3,7 @@ package lt.swedbank.itacademy.app;
 import lt.swedbank.itacademy.domain.Loan;
 import lt.swedbank.itacademy.domain.LoanRiskType;
 import lt.swedbank.itacademy.service.LoanService;
+import lt.swedbank.itacademy.service.LoanServiceInterface;
 
 public class ClientApp {
 
@@ -10,7 +11,7 @@ public class ClientApp {
 
         Loan[] loans = getInitializer().initializeLoans();
 
-        LoanService service = new LoanService(loans);
+        LoanServiceInterface service = new LoanService(loans);
 
 
         System.out.println(service.getAverageLoanCost());
@@ -24,16 +25,25 @@ public class ClientApp {
         System.out.println(service.getNormalRiskVehicleLoans().size());
         System.out.println(service.getMaximumAgeOfLowRiskLoanedVehicles());
         System.out.println("There are " + service.getPersonalRealEstateLoans().size());
-        System.out.println("There are " + service.getExpiredHighRiskVehicleLoansOfHighestDuration().size() + ", and highest duration is " + service.getExpiredHighRiskVehicleLoansOfHighestDuration().get(0).getTermInYears());
+        System.out.println("There are " + service.getExpiredHighRiskVehicleLoansOfHighestDuration().size()
+                + ", and highest duration is "
+                + service.getExpiredHighRiskVehicleLoansOfHighestDuration().get(0).getTermInYears());
 
-        System.out.println(service.findVehicleModels());
-        System.out.println(service.groupLoansByRiskType());
+        System.out.println("There are " + service.getLowRiskHarvesterLoans().size());
+        System.out.println(service.getExpiredLandLoansInReservation().size());
+        System.out.println("getLoansofHigherThanAvg " + service.getLoansOfHigherThanAverageDepreciation().size() );
+
+
+
+        //Ror tests:
+        //System.out.println(service.findVehicleModels());
+        //System.out.println(service.groupLoansByRiskType());
 
     }
 
 
     public static DomainInitializer getInitializer() {
-        return new Task2DomainInitializer();
+        return new Task3DomainInitializer();
     }
 
 }
