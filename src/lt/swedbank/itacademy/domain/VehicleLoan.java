@@ -43,60 +43,6 @@ public class VehicleLoan extends Loan {
         this.maximumAge = maximumAge;
     }
 
-    
-    public BigDecimal calculateNewInterestRate () {
-
-        BigDecimal newInterestRate = new BigDecimal(0);
-
-        if (getRiskType().equals(LoanRiskType.HIGH_RISK)) {
-            newInterestRate = super.getInterestRate().multiply(new BigDecimal(1.5));
-        } else if (getRiskType().equals(LoanRiskType.NORMAL_RISK)) {
-            newInterestRate = super.getInterestRate().multiply(new BigDecimal(1));
-        } else if (getRiskType().equals(LoanRiskType.LOW_RISK)) {
-            newInterestRate = super.getInterestRate().multiply(new BigDecimal(0.8));
-        }
-        return newInterestRate;
-    }
-
-
-    
-//    @Override
-//    public BigDecimal getInterestRate() {
-//        return interestRate;
-//    }
-    
-//    @Override
-//    public void setInterestRate(BigDecimal interestRate) {
-//        this.interestRate = interestRate;
-//    }
-
-    //@Override
-//    public void setInterestRate(BigDecimal interestRate) {
-////        for (LoanRiskType loanRiskType : LoanRiskType.values()) {
-//
-////            this.interestRate = super.getInterestRate().multiply(findCoefficient(super.getRiskType()));
-//        
-//
-////        }
-
-
-
-
-    public BigDecimal findCoefficient(LoanRiskType riskType) {
-
-        switch (super.getRiskType()) {
-            case LOW_RISK:
-                return new BigDecimal(0.8);
-            case NORMAL_RISK:
-                return new BigDecimal(1);
-            case HIGH_RISK:
-                return new BigDecimal(1.5);
-            default:
-                return null;
-        }
-
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

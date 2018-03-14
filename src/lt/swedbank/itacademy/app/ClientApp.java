@@ -27,12 +27,11 @@ public class ClientApp {
         System.out.println("There are " + service.getPersonalRealEstateLoans().size());
         System.out.println("There are " + service.getExpiredHighRiskVehicleLoansOfHighestDuration().size()
                 + ", and highest duration is "
-                + service.getExpiredHighRiskVehicleLoansOfHighestDuration().get(0).getTermInYears());
+                + service.getExpiredHighRiskVehicleLoansOfHighestDuration());
 
         System.out.println("There are " + service.getLowRiskHarvesterLoans().size());
         System.out.println(service.getExpiredLandLoansInReservation().size());
-        System.out.println("getLoansofHigherThanAvg " + service.getLoansOfHigherThanAverageDepreciation().size() );
-
+        System.out.println("getLoansofHigherThanAvg " + service.getLoansOfHigherThanAverageDepreciation().size());
 
 
         //Ror tests:

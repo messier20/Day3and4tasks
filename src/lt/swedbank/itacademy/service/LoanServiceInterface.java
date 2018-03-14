@@ -3,13 +3,12 @@ package lt.swedbank.itacademy.service;
 import lt.swedbank.itacademy.domain.*;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Collection;
 
 public interface LoanServiceInterface {
     BigDecimal getAverageLoanCost();
 
-    ArrayList<Loan> getHighRiskLoans();
+    Collection<Loan> getHighRiskLoans();
 
     BigDecimal getAverageLoanCostOfHighRiskLoans();
 
@@ -17,13 +16,13 @@ public interface LoanServiceInterface {
 
     BigDecimal getAverageLoanCost(LoanRiskType riskType);
 
-    ArrayList<VehicleLoan> getNormalRiskVehicleLoans();
+    Collection<VehicleLoan> getNormalRiskVehicleLoans();
 
     int getMaximumAgeOfLowRiskLoanedVehicles();
 
-    ArrayList<RealEstateLoan> getPersonalRealEstateLoans();
+    Collection<RealEstateLoan> getPersonalRealEstateLoans();
 
-    ArrayList<VehicleLoan> getExpiredHighRiskVehicleLoansOfHighestDuration();
+    Collection<VehicleLoan> getExpiredHighRiskVehicleLoansOfHighestDuration();
 
     Collection<HarvesterLoan> getLowRiskHarvesterLoans();
 

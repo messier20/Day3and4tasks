@@ -65,15 +65,6 @@ public class Loan {
         this.riskType = riskType;
     }
 
-
-    public BigDecimal calculateTotalLoanCost() {
-        return price.add(calculateInterest());
-    }
-
-    public BigDecimal calculateInterest() {
-        return price.multiply(getInterestRate().divide(new BigDecimal(100)));
-    }
-
     public boolean isValid() {
         Date terminationDate = DateUtil.addYears(creationDate, termInYears);
         return terminationDate.after(new Date());

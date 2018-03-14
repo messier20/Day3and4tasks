@@ -33,8 +33,7 @@ public class CarLoan extends VehicleLoan implements Comparable<CarLoan> {
         }
         if (getInterestRate().compareTo(o.getInterestRate()) < 0) {
             return -1;
-        }
-        else return 0;
+        } else return 0;
     }
 
 }
