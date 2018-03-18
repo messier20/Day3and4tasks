@@ -7,7 +7,7 @@ import java.util.Comparator;
 
 public class Prioritization {//implements Comparator<Loan> {
 
-
+//Worked well before moving all methods out from Loan class
 //    @Override
 //    public int compare(Loan o1, Loan o2) {
 //        if (o1.getRiskType().compareTo(o2.getRiskType()) > 0) {

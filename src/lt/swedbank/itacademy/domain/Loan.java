@@ -65,10 +65,6 @@ public class Loan {
         this.riskType = riskType;
     }
 
-    public boolean isValid() {
-        Date terminationDate = DateUtil.addYears(creationDate, termInYears);
-        return terminationDate.after(new Date());
-    }
 
     @Override
     public boolean equals(Object o) {

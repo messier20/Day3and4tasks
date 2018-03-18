@@ -22,7 +22,11 @@ public interface LoanServiceInterface {
 
     Collection<RealEstateLoan> getPersonalRealEstateLoans();
 
+    Collection<Integer> getTermInYears();
+
     Collection<VehicleLoan> getExpiredHighRiskVehicleLoansOfHighestDuration();
+
+    Collection<Integer> getTermsInYearsFromExpiredVehicleLoansOfHighestDuration();
 
     Collection<HarvesterLoan> getLowRiskHarvesterLoans();
 

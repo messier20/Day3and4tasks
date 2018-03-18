@@ -2,6 +2,7 @@ package lt.swedbank.itacademy.app;
 
 import lt.swedbank.itacademy.domain.Loan;
 import lt.swedbank.itacademy.domain.LoanRiskType;
+import lt.swedbank.itacademy.domain.VehicleLoan;
 import lt.swedbank.itacademy.service.LoanService;
 import lt.swedbank.itacademy.service.LoanServiceInterface;
 
@@ -27,14 +28,14 @@ public class ClientApp {
         System.out.println("There are " + service.getPersonalRealEstateLoans().size());
         System.out.println("There are " + service.getExpiredHighRiskVehicleLoansOfHighestDuration().size()
                 + ", and highest duration is "
-                + service.getExpiredHighRiskVehicleLoansOfHighestDuration());
+                + service.getTermsInYearsFromExpiredVehicleLoansOfHighestDuration());
 
         System.out.println("There are " + service.getLowRiskHarvesterLoans().size());
         System.out.println(service.getExpiredLandLoansInReservation().size());
         System.out.println("getLoansofHigherThanAvg " + service.getLoansOfHigherThanAverageDepreciation().size());
 
 
-        //Ror tests:
+        //For tests:
         //System.out.println(service.findVehicleModels());
         //System.out.println(service.groupLoansByRiskType());
 
